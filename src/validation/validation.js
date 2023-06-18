@@ -1,9 +1,11 @@
-import { responseError } from "../error/response-error.js";
+import { ResponseError } from "../error/response-error.js";
 
 const validate = (schema, request) => {
-  const result = schema.validate(request);
+  const result = schema.validate(request, {
+    abortEarly: false
+  });
   if (result.error) {
-    throw new responseError(400, result.error.message);
+    throw new ResponseError(400, result.error.message);
   } else {
     return result.value;
   }
