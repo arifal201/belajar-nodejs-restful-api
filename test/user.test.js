@@ -230,3 +230,31 @@ describe("PATCH /api/users/current", () => {
     expect(result.status).toBe(401);
   });
 });
+
+describe("DELETE /api/users/logout", () =>{
+  beforeEach(async ()=>{
+    await createTestUser();
+  });
+
+  afterEach(async ()=>{
+    await removeTestUser();
+  });
+
+  it('should can delete users logout', async () => {
+    const result = await supertest(web)
+    .delete('/api/users/logout')
+    .set('Authorization', 'test');
+    
+    const user = await getUserTest();
+    expect(result.status).toBe(200);
+    expect(user.token).toBeNull();
+  });
+
+  it('should failed delete users logout if user with no token or wrong token', async () => {
+    const result = await supertest(web)
+    .delete('/api/users/logout')
+    .set('Authorization', 'not found');
+
+    expect(result.status).toBe(401);
+  });
+});
